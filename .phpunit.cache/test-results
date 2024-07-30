@@ -1,0 +1,1 @@
+{"version":1,"defects":{"Tests\\Framework\\Http\\RequestTest::testQueryParams":7},"times":{"Tests\\Framework\\Http\\RequestTest::testEmpty":0.001,"Tests\\Framework\\Http\\RequestTest::testQueryParams":0,"Tests\\Framework\\Http\\RequestTest::testParsedBody":0}}

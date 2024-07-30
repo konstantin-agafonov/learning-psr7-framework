@@ -1,44 +1,23 @@
 <?php
 
 namespace Framework\Http;
+
 class Request
 {
-    public function getQueryParams()
+    public function __construct(
+        private array $queryParams = [],
+        private array|null $parsedBody = null,
+    )
     {
-        return $_GET;
+
+    }
+    public function getQueryParams(): array
+    {
+        return $this->queryParams;
     }
 
-    public function getParsedBody()
+    public function getParsedBody(): array|null
     {
-        return $_POST ?: null;
+        return $this->parsedBody ?: null;
     }
-
-    /*public function getBody()
-    {
-        return file_get_contents('php://input');
-    }*/
-
-
-
-
-    public function getCookies()
-    {
-        return $_COOKIE;
-    }
-
-    public function getServerParams()
-    {
-        return $_SERVER;
-    }
-
-    public function getRequestParams()
-    {
-        return $_REQUEST;
-    }
-
-    public function getFiles()
-    {
-        return $_FILES;
-    }
-
 }
