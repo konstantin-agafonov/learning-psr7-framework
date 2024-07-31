@@ -3,27 +3,18 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-use Framework\Http\RequestFactory;
-use Framework\Http\Response;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-$request = RequestFactory::fromGlobals();
+$request = ServerRequestFactory::fromGlobals();
 
 $name = $request->getQueryParams()['name'] ?? 'Guest';
 
-$response = (new Response("Hello, " . $name . "!"))
+$response = (new HtmlResponse("Hello, " . $name . "!"))
     ->withHeader("X-Developer", "Elisdn");
 
-header(
-    'HTTP/1.0 '
-    . $response->getStatusCode()
-    . ' ' . $response->getReasonPhrase()
-);
-
-foreach ($response->getHeaders() as $name => $value) {
-    header($name . ':' . $value);
-}
-
-echo $response->getBody();
+(new SapiEmitter())->emit($response);

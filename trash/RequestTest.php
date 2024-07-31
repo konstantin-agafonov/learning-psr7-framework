@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Framework\Http;
+namespace trash;
 
-use Framework\Http\Request;
+use Laminas\Diactoros\Request;
 use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase

@@ -2,11 +2,15 @@
 
 namespace Framework\Http;
 
-class Response
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+
+class Response implements ResponseInterface
 {
     private array $headers = [];
     private string $reasonPhrase = '';
-    private static $phrases = [
+    private static array $phrases = [
         200 => 'OK',
         201 => 'Created',
         202 => 'Accepted',
@@ -52,7 +56,7 @@ class Response
     ];
 
     public function __construct(
-        private string $body,
+        private StreamInterface $body,
         private int $statusCode = 200,
     )
     {
@@ -72,7 +76,7 @@ class Response
         return $this->reasonPhrase;
     }
 
-    public function withHeader(string $name, string $value): self
+    public function withHeader(string $name, $value): self
     {
         $new = clone $this;
         if ($new->hasHeader($name)) {
@@ -89,22 +93,22 @@ class Response
         return $new;
     }
 
-    public function withStatus(int $status, $reasonPhrase = ''): self
+    public function withStatus(int $code, $reasonPhrase = ''): self
     {
         $new = clone $this;
-        $new->statusCode = $status;
+        $new->statusCode = $code;
         $new->reasonPhrase = $reasonPhrase;
         return $new;
     }
 
-    public function withBody(string $body): self
+    public function withBody(StreamInterface $body): self
     {
         $new = clone $this;
         $new->body = $body;
         return $new;
     }
 
-    public function getBody(): string
+    public function getBody(): StreamInterface
     {
         return $this->body;
     }
@@ -119,12 +123,36 @@ class Response
         return isset($this->headers[$name]);
     }
 
-    public function getHeader(string $name)
+    public function getHeader(string $name): array
     {
         if (!$this->hasHeader($name)) {
-            return null;
+            return [];
         }
         return $this->headers[$name];
     }
 
+    public function getProtocolVersion(): string
+    {
+        // TODO: Implement getProtocolVersion() method.
+    }
+
+    public function withProtocolVersion(string $version): MessageInterface
+    {
+        // TODO: Implement withProtocolVersion() method.
+    }
+
+    public function getHeaderLine(string $name): string
+    {
+        // TODO: Implement getHeaderLine() method.
+    }
+
+    public function withAddedHeader(string $name, $value): MessageInterface
+    {
+        // TODO: Implement withAddedHeader() method.
+    }
+
+    public function withoutHeader(string $name): MessageInterface
+    {
+        // TODO: Implement withoutHeader() method.
+    }
 }
