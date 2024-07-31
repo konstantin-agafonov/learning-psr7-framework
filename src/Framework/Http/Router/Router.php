@@ -32,7 +32,19 @@ class Router
 
     public function generate(string $name, array $params = []): string
     {
-        return '/' . implode('/', $params);
+        $arguments = array_filter($params, fn ($value) => $value !== null);
+
+        foreach ($this->routes->getRoutes() as $route) {
+            if ($name !== $route->getName()) {
+                continue;
+            }
+
+            if ($url !== null) {
+                return $url;
+            }
+        }
+
+        throw new RouteNotFoundException($name, $params);
     }
 
 }

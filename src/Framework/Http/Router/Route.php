@@ -14,4 +14,14 @@ class Route
     {
 
     }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getPattern(): string
+    {
+        return $this->pattern;
+    }
 }
