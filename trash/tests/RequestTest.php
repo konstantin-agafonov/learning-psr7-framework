@@ -1,6 +1,6 @@
 <?php
 
-namespace trash;
+namespace trash\tests;
 
 use Laminas\Diactoros\Request;
 use PHPUnit\Framework\TestCase;
