@@ -2,21 +2,24 @@
 
 namespace Tests\Framework\Http;
 
-use http\Exception\InvalidArgumentException;
+use Framework\Http\Router\Exception\RequestNotMatchedException;
+use Framework\Http\Router\RouteCollection;
+use Framework\Http\Router\Router;
 use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\Uri;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
     public function testCorrectMethod()
     {
-        $routes = new RoutesCollection();
+        $routes = new RouteCollection();
 
         $routes->get(
-            $nameGet = 'blog', '/blog', $handlerGet = 'handler_get'
+            $nameGet = 'blog', '/blog', $handlerGet = fn() => null
         );
         $routes->post(
-            $namePost = 'blog_edit', '/blog', $handlerPost = 'handler_post'
+            $namePost = 'blog_edit', '/blog', $handlerPost = fn() => null
         );
 
         $router = new Router($routes);
@@ -36,9 +39,9 @@ class RouterTest extends TestCase
 
     public function testMissingMethod()
     {
-        $routes = new RoutesCollection();
+        $routes = new RouteCollection();
 
-        $routes->post('blog', '/blog', 'handler_post');
+        $routes->post('blog', '/blog', fn() => null);
 
         $router = new Router($routes);
 
@@ -48,10 +51,10 @@ class RouterTest extends TestCase
 
     public function testCorrectAttributes()
     {
-        $routes = new RoutesCollection();
+        $routes = new RouteCollection();
 
         $routes->get(
-            $name = 'blog_show', '/blog/{id}', 'handler', ['id' => '\d+']
+            $name = 'blog_show', '/blog/{id}', fn() => null, ['id' => '\d+']
         );
 
         $router = new Router($routes);
@@ -65,10 +68,10 @@ class RouterTest extends TestCase
 
     public function testIncorrectAttributes()
     {
-        $routes = new RoutesCollection();
+        $routes = new RouteCollection();
 
         $routes->get(
-            $name = 'blog_show', '/blog/{id}', 'handler', ['id' => '\d+']
+            $name = 'blog_show', '/blog/{id}', fn() => null, ['id' => '\d+']
         );
 
         $router = new Router($routes);
@@ -79,10 +82,10 @@ class RouterTest extends TestCase
 
     public function testGenerate()
     {
-        $routes = new RoutesCollection();
+        $routes = new RouteCollection();
 
-        $routes->get('blog', '/blog', 'handler');
-        $routes->get('blog_show', '/blog/{id}', 'handler', ['id' => '\d+']);
+        $routes->get('blog', '/blog', fn() => null);
+        $routes->get('blog_show', '/blog/{id}', fn() => null, ['id' => '\d+']);
 
         $router = new Router($routes);
 
@@ -92,13 +95,13 @@ class RouterTest extends TestCase
 
     public function testGenerateMissingAttributes()
     {
-        $routes = new RoutesCollection();
+        $routes = new RouteCollection();
 
-        $routes->get($name = 'blog_show', '/blog/{id}', 'handler', ['id' => '\d+']);
+        $routes->get($name = 'blog_show', '/blog/{id}', fn() => null, ['id' => '\d+']);
 
         $router = new Router($routes);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $router->generate($name, ['slug' => 'post']);
     }
 
@@ -106,8 +109,6 @@ class RouterTest extends TestCase
     {
         return (new ServerRequest())
             ->withMethod($method)
-            ->withUri($uri);
+            ->withUri(new Uri($uri));
     }
 }
-
-
