@@ -40,6 +40,8 @@ class ComposerStaticInit118a3d9996fb740b21ddc9db3af50fa3
         ),
         'A' => 
         array (
+            'Aura\\Router\\_Config\\' => 20,
+            'Aura\\Router\\' => 12,
             'App\\' => 4,
         ),
     );
@@ -73,6 +75,14 @@ class ComposerStaticInit118a3d9996fb740b21ddc9db3af50fa3
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'Aura\\Router\\_Config\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/aura/router/config',
+        ),
+        'Aura\\Router\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/aura/router/src',
         ),
         'App\\' => 
         array (

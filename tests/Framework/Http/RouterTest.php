@@ -4,7 +4,7 @@ namespace Tests\Framework\Http;
 
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Framework\Http\Router\RouteCollection;
-use Framework\Http\Router\Router;
+use Framework\Http\Router\SimpleRouter;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\Uri;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +22,7 @@ class RouterTest extends TestCase
             $namePost = 'blog_edit', '/blog', $handlerPost = fn() => null
         );
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $result = $router->match(
             $this->buildRequest('GET', '/blog')
@@ -43,7 +43,7 @@ class RouterTest extends TestCase
 
         $routes->post('blog', '/blog', fn() => null);
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $this->expectException(RequestNotMatchedException::class);
         $router->match($this->buildRequest('DELETE', '/blog'));
@@ -57,7 +57,7 @@ class RouterTest extends TestCase
             $name = 'blog_show', '/blog/{id}', fn() => null, ['id' => '\d+']
         );
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $result = $router->match(
             $this->buildRequest('GET', '/blog/5')
@@ -74,7 +74,7 @@ class RouterTest extends TestCase
             $name = 'blog_show', '/blog/{id}', fn() => null, ['id' => '\d+']
         );
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $this->expectException(RequestNotMatchedException::class);
         $router->match($this->buildRequest('GET', '/blog/slug'));
@@ -87,7 +87,7 @@ class RouterTest extends TestCase
         $routes->get('blog', '/blog', fn() => null);
         $routes->get('blog_show', '/blog/{id}', fn() => null, ['id' => '\d+']);
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         self::assertEquals('/blog', $router->generate('blog'));
         self::assertEquals('/blog/5', $router->generate('blog_show', ['id' => 5]));
@@ -99,7 +99,7 @@ class RouterTest extends TestCase
 
         $routes->get($name = 'blog_show', '/blog/{id}', fn() => null, ['id' => '\d+']);
 
-        $router = new Router($routes);
+        $router = new SimpleRouter($routes);
 
         $this->expectException(\InvalidArgumentException::class);
         $router->generate($name, ['slug' => 'post']);

@@ -1,16 +1,16 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+/*error_reporting(E_ALL);
+ini_set('display_errors', 1);*/
 
 use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\SingleAction;
 use App\Http\Action\HelloAction;
-use Framework\Http\Router\ActionResolver;
+use Aura\Router\RouterFactory;
+use Framework\Http\ActionResolver;
+use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
-use Framework\Http\Router\RouteCollection;
-use Framework\Http\Router\Router;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -18,14 +18,17 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-$routes = new RouteCollection();
+$router_factory = new RouterFactory();
+$aura_router = $router_factory->newInstance();
 
-$routes->get('home', '/', HelloAction::class);
-$routes->get('about', '/about', AboutAction::class);
-$routes->get('blog', '/blog', IndexAction::class);
-$routes->get('blog_single', '/blog/{id}', SingleAction::class, ['id' => '\d+']);
+// add a simple named route without params
+$aura_router->addGet('home', '/', HelloAction::class);
+$aura_router->addGet('about', '/about', AboutAction::class);
+$aura_router->addGet('blog', '/blog', IndexAction::class);
+$aura_router->addGet('blog_single', '/blog/{id}', SingleAction::class)
+    ->addTokens(['id' => '\d+']);
 
-$router = new Router($routes);
+$router = new AuraRouterAdapter($aura_router);
 
 $request = ServerRequestFactory::fromGlobals();
 

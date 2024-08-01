@@ -13,5 +13,7 @@ return array(
     'Laminas\\Diactoros\\' => array($vendorDir . '/laminas/laminas-diactoros/src'),
     'Framework\\' => array($baseDir . '/src/Framework'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'Aura\\Router\\_Config\\' => array($vendorDir . '/aura/router/config'),
+    'Aura\\Router\\' => array($vendorDir . '/aura/router/src'),
     'App\\' => array($baseDir . '/src/App'),
 );
