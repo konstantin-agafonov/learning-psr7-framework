@@ -6,9 +6,26 @@ class RouteCollection
 {
     private $routes = [];
 
-    public function __construct(array $routes = [])
+    public function addRoute(Route $route): void
     {
+        $this->routes[] = $route;
+    }
 
+    public function add(
+        string $name,
+        string $pattern,
+        callable $handler,
+        array $methods,
+        array $tokens = []
+    ): void
+    {
+        $this->addRoute(new Route(
+            name: $name,
+            pattern: $pattern,
+            handler: $handler,
+            methods: $methods,
+            tokens: $tokens,
+        ));
     }
 
     public function any(
@@ -18,13 +35,13 @@ class RouteCollection
         array $tokens = []
     ): void
     {
-        $this->routes[] = new Route(
+        $this->addRoute(new Route(
             name: $name,
             pattern: $pattern,
             handler: $handler,
             methods: [],
             tokens: $tokens,
-        );
+        ));
     }
 
     public function get(
@@ -34,13 +51,13 @@ class RouteCollection
         array $tokens = []
     ): void
     {
-        $this->routes[] = new Route(
+        $this->addRoute(new Route(
             name: $name,
             pattern: $pattern,
             handler: $handler,
             methods: ['GET'],
             tokens: $tokens,
-        );
+        ));
     }
 
     public function post(
@@ -50,13 +67,13 @@ class RouteCollection
         array $tokens = []
     ): void
     {
-        $this->routes[] = new Route(
+        $this->addRoute(new Route(
             name: $name,
             pattern: $pattern,
             handler: $handler,
             methods: ['POST'],
             tokens: $tokens,
-        );
+        ));
     }
 
     public function getRoutes(): array
