@@ -18,7 +18,7 @@ class Result
         return $this->name;
     }
 
-    public function getHandler(): callable
+    public function getHandler(): callable|string
     {
         return $this->handler;
     }

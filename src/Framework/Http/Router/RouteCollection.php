@@ -2,6 +2,9 @@
 
 namespace Framework\Http\Router;
 
+use Framework\Http\Router\Route\RegexpRoute;
+use Framework\Http\Router\Route\Route;
+
 class RouteCollection
 {
     private $routes = [];
@@ -14,12 +17,12 @@ class RouteCollection
     public function add(
         string $name,
         string $pattern,
-        callable $handler,
+        string|callable $handler,
         array $methods,
         array $tokens = []
     ): void
     {
-        $this->addRoute(new Route(
+        $this->addRoute(new RegexpRoute(
             name: $name,
             pattern: $pattern,
             handler: $handler,
@@ -31,11 +34,11 @@ class RouteCollection
     public function any(
         string $name,
         string $pattern,
-        callable $handler,
+        string|callable $handler,
         array $tokens = []
     ): void
     {
-        $this->addRoute(new Route(
+        $this->addRoute(new RegexpRoute(
             name: $name,
             pattern: $pattern,
             handler: $handler,
@@ -47,11 +50,11 @@ class RouteCollection
     public function get(
         string $name,
         string $pattern,
-        callable $handler,
+        string|callable $handler,
         array $tokens = []
     ): void
     {
-        $this->addRoute(new Route(
+        $this->addRoute(new RegexpRoute(
             name: $name,
             pattern: $pattern,
             handler: $handler,
@@ -63,11 +66,11 @@ class RouteCollection
     public function post(
         string $name,
         string $pattern,
-        callable $handler,
+        string|callable $handler,
         array $tokens = []
     ): void
     {
-        $this->addRoute(new Route(
+        $this->addRoute(new RegexpRoute(
             name: $name,
             pattern: $pattern,
             handler: $handler,
