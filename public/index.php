@@ -11,6 +11,7 @@ use Aura\Router\RouterFactory;
 use Framework\Http\ActionResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -41,7 +42,7 @@ try {
     $action = ActionResolver::resolve($callable);
     $response = $action($request);
 } catch (RequestNotMatchedException $e) {
-    $response = new JsonResponse(['error' => 'Undefined page!'], 404);
+    $response = new HtmlResponse('Undefined page!', 404);
 }
 
 $response = $response->withHeader("X-Developer", "Elisdn");
