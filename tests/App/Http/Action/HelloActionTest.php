@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Action\Blog;
+namespace App\Http\Action;
 
-use App\Http\Action\HelloAction;
 use Laminas\Diactoros\ServerRequest;
 use PHPUnit\Framework\TestCase;
 

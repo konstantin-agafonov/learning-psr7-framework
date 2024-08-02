@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class IndexAction
 {
-    public function __invoke(ServerRequestInterface $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
         return new JsonResponse([
             ['id' => 1, 'title' => '1 Hello World!'],
