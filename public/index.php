@@ -6,7 +6,10 @@ ini_set('display_errors', 1);*/
 use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\SingleAction;
+use App\Http\Action\CabinetAction;
 use App\Http\Action\HelloAction;
+use App\Http\Middleware\BasicAuthMiddleware;
+use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterFactory;
 use Framework\Http\ActionResolver;
 use Framework\Http\Router\AuraRouterAdapter;
@@ -15,9 +18,19 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Psr\Http\Message\ServerRequestInterface;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
+
+$params = [
+    'users' => [
+        'admin' => '1111',
+    ],
+];
+
+$auth = new BasicAuthMiddleware($params['users']);
+$profiler = new ProfilerMiddleware();
 
 $router_factory = new RouterFactory();
 $aura_router = $router_factory->newInstance();
@@ -28,6 +41,18 @@ $aura_router->addGet('about', '/about', AboutAction::class);
 $aura_router->addGet('blog', '/blog', IndexAction::class);
 $aura_router->addGet('blog_single', '/blog/{id}', SingleAction::class)
     ->addTokens(['id' => '\d+']);
+
+$aura_router->addGet(
+    'cabinet',
+    '/cabinet',
+    function (ServerRequestInterface $request) use ($auth, $profiler) {
+        return $auth($request, function (ServerRequestInterface $request) use ($profiler) {
+            return $profiler($request, function (ServerRequestInterface $request) {
+                return (new CabinetAction())($request);
+            });
+        });
+    }
+);
 
 $router = new AuraRouterAdapter($aura_router);
 
