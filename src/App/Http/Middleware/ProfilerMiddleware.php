@@ -6,7 +6,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ProfilerMiddleware
 {
-    public function __invoke(ServerRequestInterface $request, callable $next)
+    public function __invoke(
+        ServerRequestInterface $request,
+        callable $next
+    )
     {
         $start = microtime(true);
         $response = $next($request);

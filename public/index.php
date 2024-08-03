@@ -12,6 +12,7 @@ use App\Http\Middleware\BasicAuthMiddleware;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterFactory;
 use Framework\Http\ActionResolver;
+use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -25,7 +26,7 @@ require 'vendor/autoload.php';
 
 $params = [
     'users' => [
-        'admin' => '1111',
+        'admin2' => '1111',
     ],
 ];
 
@@ -45,12 +46,12 @@ $aura_router->addGet('blog_single', '/blog/{id}', SingleAction::class)
 $aura_router->addGet(
     'cabinet',
     '/cabinet',
-    function (ServerRequestInterface $request) use ($auth, $profiler) {
-        return $auth($request, function (ServerRequestInterface $request) use ($profiler) {
-            return $profiler($request, function (ServerRequestInterface $request) {
-                return (new CabinetAction())($request);
-            });
-        });
+    function (ServerRequestInterface $request) use ($params, $profiler, $auth) {
+        $pipeline = (new Pipeline())
+            ->pipe($profiler)
+            ->pipe($auth);
+
+        return $pipeline($request, new CabinetAction());
     }
 );
 

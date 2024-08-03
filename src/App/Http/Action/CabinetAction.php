@@ -9,7 +9,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class CabinetAction
 {
-    public function __invoke(ServerRequestInterface $request): Response
+    public function __invoke(
+        ServerRequestInterface $request
+    ): Response
     {
         return new HtmlResponse(
             'I am ' . $request->getAttribute(
