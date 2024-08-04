@@ -61,10 +61,8 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
-    $handlers = $result->getHandler();
-    foreach (is_array($handlers) ? $handlers : [$handlers] as $handler) {
-        $pipeline->pipe(MiddlewareResolver::resolve($handler));
-    }
+    $handler = $result->getHandler();
+    $pipeline->pipe(MiddlewareResolver::resolve($handler));
 } catch (RequestNotMatchedException $e) {}
 
 $response = $pipeline($request, new NotFoundHandler());

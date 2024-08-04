@@ -10,13 +10,12 @@ use Psr\Http\Message\ServerRequestInterface;
 class SingleAction
 {
     public function __invoke(
-        ServerRequestInterface $request,
-        callable $next,
+        ServerRequestInterface $request
     ): Response
     {
         $id = $request->getAttribute('id');
         if ($id > 5) {
-            return $next($request);
+            return new HtmlResponse('Undefined page!', 404);
         }
 
         return new JsonResponse(['id' => $id, 'title' => 'Post #' . $id]);
