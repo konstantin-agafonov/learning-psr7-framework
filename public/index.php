@@ -16,11 +16,8 @@ use Framework\Http\MiddlewareResolver;
 use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
-use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Psr\Http\Message\ServerRequestInterface;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -32,7 +29,6 @@ $params = [
 ];
 
 $auth = new BasicAuthMiddleware($params['users']);
-$profiler = new ProfilerMiddleware();
 
 $router_factory = new RouterFactory();
 $aura_router = $router_factory->newInstance();
@@ -56,7 +52,7 @@ $aura_router->addGet(
 $router = new AuraRouterAdapter($aura_router);
 
 $pipeline = new Pipeline();
-$pipeline->pipe($profiler);
+$pipeline->pipe(MiddlewareResolver::resolve(ProfilerMiddleware::class));
 
 $request = ServerRequestFactory::fromGlobals();
 

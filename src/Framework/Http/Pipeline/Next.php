@@ -8,15 +8,15 @@ use SplQueue;
 
 class Next
 {
-    private $default;
+    private $next;
     private SplQueue $queue;
 
     public function __construct(
         SplQueue $queue,
-        callable $default
+        callable $next
     )
     {
-        $this->default = $default;
+        $this->default = $next;
         $this->queue = $queue;
     }
 
