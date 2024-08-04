@@ -25,23 +25,8 @@ class Pipeline
         callable $default
     ): ResponseInterface
     {
-        return $this->next($request, $default);
-    }
+        $delegate = new Next($this->queue, $default);
 
-    private function next(
-        ServerRequestInterface $request,
-        callable $default
-    ): ResponseInterface
-    {
-        if ($this->queue->isEmpty()) {
-            return $default($request);
-        }
-
-        return ($this->queue->dequeue())(
-            $request,
-            function (ServerRequestInterface $request) use ($default) {
-                return $this->next($request, $default);
-            }
-        );
+        return $delegate($request);
     }
 }

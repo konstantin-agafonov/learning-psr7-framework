@@ -26,7 +26,7 @@ require 'vendor/autoload.php';
 
 $params = [
     'users' => [
-        'admin2' => '1111',
+        'admin' => '1111',
     ],
 ];
 
