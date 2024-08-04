@@ -8,17 +8,14 @@ class Result
         private string $name,
         private $handler,
         private array $attributes = [],
-    )
-    {
-
-    }
+    ) {}
 
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function getHandler(): callable|string
+    public function getHandler(): callable|string|array
     {
         return $this->handler;
     }

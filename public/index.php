@@ -9,9 +9,10 @@ use App\Http\Action\Blog\SingleAction;
 use App\Http\Action\CabinetAction;
 use App\Http\Action\HelloAction;
 use App\Http\Middleware\BasicAuthMiddleware;
+use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterFactory;
-use Framework\Http\ActionResolver;
+use Framework\Http\MiddlewareResolver;
 use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
@@ -46,16 +47,16 @@ $aura_router->addGet('blog_single', '/blog/{id}', SingleAction::class)
 $aura_router->addGet(
     'cabinet',
     '/cabinet',
-    function (ServerRequestInterface $request) use ($params, $profiler, $auth) {
-        $pipeline = (new Pipeline())
-            ->pipe($profiler)
-            ->pipe($auth);
-
-        return $pipeline($request, new CabinetAction());
-    }
+    [
+        $auth,
+        new CabinetAction(),
+    ]
 );
 
 $router = new AuraRouterAdapter($aura_router);
+
+$pipeline = new Pipeline();
+$pipeline->pipe($profiler);
 
 $request = ServerRequestFactory::fromGlobals();
 
@@ -64,12 +65,13 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
-    $callable = $result->getHandler();
-    $action = ActionResolver::resolve($callable);
-    $response = $action($request);
-} catch (RequestNotMatchedException $e) {
-    $response = new HtmlResponse('Undefined page!', 404);
-}
+    $handlers = $result->getHandler();
+    foreach (is_array($handlers) ? $handlers : [$handlers] as $handler) {
+        $pipeline->pipe(MiddlewareResolver::resolve($handler));
+    }
+} catch (RequestNotMatchedException $e) {}
+
+$response = $pipeline($request, new NotFoundHandler());
 
 $response = $response->withHeader("X-Developer", "Elisdn");
 
