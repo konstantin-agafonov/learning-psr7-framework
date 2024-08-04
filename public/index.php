@@ -12,6 +12,7 @@ use App\Http\Middleware\BasicAuthMiddleware;
 use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterFactory;
+use Framework\Http\Application;
 use Framework\Http\MiddlewareResolver;
 use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
@@ -51,8 +52,8 @@ $aura_router->addGet(
 
 $router = new AuraRouterAdapter($aura_router);
 
-$pipeline = new Pipeline();
-$pipeline->pipe(MiddlewareResolver::resolve(ProfilerMiddleware::class));
+$app = new Application();
+$app->pipe(ProfilerMiddleware::class);
 
 $request = ServerRequestFactory::fromGlobals();
 
@@ -61,11 +62,10 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
-    $handler = $result->getHandler();
-    $pipeline->pipe(MiddlewareResolver::resolve($handler));
+    $app->pipe($result->getHandler());
 } catch (RequestNotMatchedException $e) {}
 
-$response = $pipeline($request, new NotFoundHandler());
+$response = $app($request, new NotFoundHandler());
 
 $response = $response->withHeader("X-Developer", "Elisdn");
 

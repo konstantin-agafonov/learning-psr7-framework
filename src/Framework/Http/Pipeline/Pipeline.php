@@ -13,10 +13,10 @@ class Pipeline
         $this->queue = new \SplQueue();
     }
 
-    public function pipe(callable $callback): Pipeline
+    public function pipe($middleware): Pipeline
     {
         $new = clone $this;
-        $new->queue->enqueue($callback);
+        $new->queue->enqueue($middleware);
         return $new;
     }
 
