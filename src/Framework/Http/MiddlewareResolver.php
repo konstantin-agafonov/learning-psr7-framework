@@ -31,7 +31,7 @@ class MiddlewareResolver
     {
         $pipe = new Pipeline();
         foreach ($handlers as $handler) {
-            $pipe->pipe(MiddlewareResolver::resolve($handler));
+            $pipe->pipe(self::resolve($handler));
         }
         return $pipe;
     }
