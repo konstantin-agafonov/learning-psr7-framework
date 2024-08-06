@@ -52,7 +52,7 @@ $aura_router->addGet(
 
 $router = new AuraRouterAdapter($aura_router);
 
-$app = new Application();
+$app = new Application(new NotFoundHandler());
 $app->pipe(ProfilerMiddleware::class);
 
 $request = ServerRequestFactory::fromGlobals();
@@ -65,7 +65,7 @@ try {
     $app->pipe($result->getHandler());
 } catch (RequestNotMatchedException $e) {}
 
-$response = $app($request, new NotFoundHandler());
+$response = $app->run($request);
 
 $response = $response->withHeader("X-Developer", "Elisdn");
 
