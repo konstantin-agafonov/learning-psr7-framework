@@ -15,16 +15,10 @@ use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterFactory;
 use Framework\Http\Application;
-use Framework\Http\MiddlewareResolver;
-use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
-use Framework\Http\Router\Exception\RequestNotMatchedException;
-use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\Response\JsonResponse;
+use Framework\Middleware\RouterMiddleware;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -61,19 +55,12 @@ $router = new AuraRouterAdapter($aura_router);
 
 $app = new Application(new NotFoundHandler());
 
-$app->pipe(new ErrorHandlerMiddleware($params['debug']));
-$app->pipe(CredentialsMiddleware::class);
-$app->pipe(ProfilerMiddleware::class);
+$app->pipe(new ErrorHandlerMiddleware($params['debug']))
+    ->pipe(CredentialsMiddleware::class)
+    ->pipe(ProfilerMiddleware::class)
+    ->pipe(new RouterMiddleware($router));
 
 $request = ServerRequestFactory::fromGlobals();
-
-try {
-    $result = $router->match($request);
-    foreach ($result->getAttributes() as $attribute => $value) {
-        $request = $request->withAttribute($attribute, $value);
-    }
-    $app->pipe($result->getHandler());
-} catch (RequestNotMatchedException $e) {}
 
 $response = $app->run($request);
 
