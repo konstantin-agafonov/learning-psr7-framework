@@ -9,6 +9,7 @@ use App\Http\Action\Blog\SingleAction;
 use App\Http\Action\CabinetAction;
 use App\Http\Action\HelloAction;
 use App\Http\Middleware\BasicAuthMiddleware;
+use App\Http\Middleware\CredentialsMiddleware;
 use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterFactory;
@@ -19,6 +20,7 @@ use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Psr\Http\Message\ServerRequestInterface;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -53,6 +55,8 @@ $aura_router->addGet(
 $router = new AuraRouterAdapter($aura_router);
 
 $app = new Application(new NotFoundHandler());
+
+$app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfilerMiddleware::class);
 
 $request = ServerRequestFactory::fromGlobals();
@@ -66,7 +70,5 @@ try {
 } catch (RequestNotMatchedException $e) {}
 
 $response = $app->run($request);
-
-$response = $response->withHeader("X-Developer", "Elisdn");
 
 (new SapiEmitter())->emit($response);
