@@ -16,6 +16,8 @@ use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterFactory;
 use Framework\Http\Application;
 use Framework\Http\Router\AuraRouterAdapter;
+use Framework\Middleware\DispatchMiddleware;
+use Framework\Middleware\MaintenanceMiddleware;
 use Framework\Middleware\RouterMiddleware;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -58,7 +60,9 @@ $app = new Application(new NotFoundHandler());
 $app->pipe(new ErrorHandlerMiddleware($params['debug']))
     ->pipe(CredentialsMiddleware::class)
     ->pipe(ProfilerMiddleware::class)
-    ->pipe(new RouterMiddleware($router));
+    ->pipe(new RouterMiddleware($router))
+    ->pipe(MaintenanceMiddleware::class)
+    ->pipe(DispatchMiddleware::class);
 
 $request = ServerRequestFactory::fromGlobals();
 
