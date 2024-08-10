@@ -3,7 +3,9 @@
 namespace Framework\Http;
 
 use Framework\Http\Pipeline\Pipeline;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 class MiddlewareResolver
 {
@@ -16,12 +18,32 @@ class MiddlewareResolver
         if (is_string($handler)) {
             return function (
                 ServerRequestInterface $request,
+                ResponseInterface $response,
                 callable $next
             ) use ($handler)
             {
-                $object = new $handler();
-                return $object($request, $next);
+                $middleware = self::resolve(new $handler());
+                return $middleware($request, $response, $next);
             };
+        }
+
+        if ($handler instanceof MiddlewareInterface) {
+            return function(
+                ServerRequestInterface $request,
+                ResponseInterface $response,
+                callable $next
+            ) use ($handler)
+            {
+                return $handler->process(
+                    $request,
+                    new InteropHandlerWrapper($next)
+                );
+            };
+        }
+
+        if (is_object($handler)) {
+            $reflection = new \ReflectionObject($handler);
+            if
         }
 
         return $handler;
