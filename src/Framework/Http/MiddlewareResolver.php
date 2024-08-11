@@ -3,6 +3,7 @@
 namespace Framework\Http;
 
 use Framework\Http\Pipeline\Pipeline;
+use Framework\Http\Pipeline\UnknownMiddlewareTypeException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -43,10 +44,24 @@ class MiddlewareResolver
 
         if (is_object($handler)) {
             $reflection = new \ReflectionObject($handler);
-            if
+            if ($reflection->hasMethod('__invoke')) {
+                $method = $reflection->getMethod('__invoke');
+                $parameters = $method->getParameters();
+                if (count($parameters) === 2 && $parameters[1]->isCallable()) {
+                    return function (
+                        ServerRequestInterface $request,
+                        ResponseInterface $response,
+                        callable $next
+                    ) use ($handler)
+                    {
+                        return $handler($request, $next);
+                    };
+                }
+                return $handler;
+            }
         }
 
-        return $handler;
+        throw new UnknownMiddlewareTypeException($handler);
     }
 
     private static function createPipe(array $handlers): Pipeline

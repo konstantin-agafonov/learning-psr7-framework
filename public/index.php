@@ -19,6 +19,7 @@ use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Middleware\DispatchMiddleware;
 use Framework\Middleware\MaintenanceMiddleware;
 use Framework\Middleware\RouterMiddleware;
+use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -61,11 +62,14 @@ $app->pipe(new ErrorHandlerMiddleware($params['debug']))
     ->pipe(CredentialsMiddleware::class)
     ->pipe(ProfilerMiddleware::class)
     ->pipe(new RouterMiddleware($router))
-    ->pipe(MaintenanceMiddleware::class)
+    /*->pipe(MaintenanceMiddleware::class)*/
     ->pipe(DispatchMiddleware::class);
 
 $request = ServerRequestFactory::fromGlobals();
 
-$response = $app->run($request);
+$response = $app->run(
+    $request,
+    new Response()
+);
 
 (new SapiEmitter())->emit($response);

@@ -21,8 +21,11 @@ class Application extends Pipeline
         return parent::pipe(MiddlewareResolver::resolve($middleware));
     }
 
-    public function run(ServerRequestInterface $request): ResponseInterface
+    public function run(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): ResponseInterface
     {
-        return $this($request, $this->default);
+        return $this($request, $response, $this->default);
     }
 }
