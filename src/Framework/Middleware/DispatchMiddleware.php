@@ -2,7 +2,7 @@
 
 namespace Framework\Middleware;
 
-use Framework\Http\MiddlewareResolver;
+use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\Result;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

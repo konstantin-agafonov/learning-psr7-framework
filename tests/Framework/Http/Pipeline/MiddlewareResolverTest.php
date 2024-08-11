@@ -2,7 +2,7 @@
 
 namespace Tests\Framework\Http\Pipeline;
 
-use Framework\Http\MiddlewareResolver;
+use Framework\Http\Pipeline\MiddlewareResolver;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\HtmlResponse;
