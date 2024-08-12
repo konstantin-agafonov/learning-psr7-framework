@@ -15,6 +15,10 @@ class ComposerStaticInit118a3d9996fb740b21ddc9db3af50fa3
         'de95e0ac670b27c84ef8c5ac41fc1b34' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/normalize_server.php',
         'b6c2870932b0250c10334a86dcb33c7f' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/normalize_uploaded_files.php',
         'd02cf21124526632320d6f20b1bbf905' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/parse_cookie_header.php',
+        '3f8ee9969da604d0f15c841b77b11450' => __DIR__ . '/..' . '/laminas/laminas-stratigility/src/functions/double-pass-middleware.php',
+        'ee5523a5d51d6d51030227439db1ef74' => __DIR__ . '/..' . '/laminas/laminas-stratigility/src/functions/host.php',
+        '5f6e29ca023a0bdefa2476adb465d527' => __DIR__ . '/..' . '/laminas/laminas-stratigility/src/functions/middleware.php',
+        '9cafd472178656835c3361ed18897082' => __DIR__ . '/..' . '/laminas/laminas-stratigility/src/functions/path.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     );
 
@@ -27,12 +31,15 @@ class ComposerStaticInit118a3d9996fb740b21ddc9db3af50fa3
         ),
         'L' => 
         array (
+            'Laminas\\Stratigility\\' => 21,
             'Laminas\\HttpHandlerRunner\\' => 26,
+            'Laminas\\Escaper\\' => 16,
             'Laminas\\Diactoros\\' => 18,
         ),
         'F' => 
         array (
             'Framework\\' => 10,
+            'Fig\\Http\\Message\\' => 17,
         ),
         'D' => 
         array (
@@ -61,9 +68,17 @@ class ComposerStaticInit118a3d9996fb740b21ddc9db3af50fa3
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
+        'Laminas\\Stratigility\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laminas/laminas-stratigility/src',
+        ),
         'Laminas\\HttpHandlerRunner\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-httphandlerrunner/src',
+        ),
+        'Laminas\\Escaper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laminas/laminas-escaper/src',
         ),
         'Laminas\\Diactoros\\' => 
         array (
@@ -72,6 +87,10 @@ class ComposerStaticInit118a3d9996fb740b21ddc9db3af50fa3
         'Framework\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/Framework',
+        ),
+        'Fig\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fig/http-message-util/src',
         ),
         'DeepCopy\\' => 
         array (
