@@ -1,2 +1,6 @@
 /vendor
 /phpunit.xml
+.idea/
+.osp/
+vendor/
+phpunit.xml
